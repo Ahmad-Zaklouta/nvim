@@ -1,2 +1,2 @@
-# vim
-vim configuration
+# nvim
+nvim configuration
