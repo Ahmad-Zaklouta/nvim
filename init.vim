@@ -1,25 +1,29 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+  Plug 'Ahmad-Zaklouta/gruvbox'
+  Plug 'Ahmad-Zaklouta/vim-vhdl'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-  "Plug 'morhetz/gruvbox'
-  "Plug 'https://github.com/lifepillar/vim-solarized8.git'
-  Plug 'sainnhe/vim-color-forest-night'
   Plug 'scrooloose/nerdtree'
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
   Plug 'christoomey/vim-system-copy'
   Plug 'kana/vim-textobj-user'
+  Plug 'kana/vim-textobj-indent'
   Plug 'kana/vim-textobj-entire'
   Plug 'kana/vim-textobj-line'
-
+  Plug 'Yggdroot/indentLine'
+"  Plug 'https://github.com/vim-scripts/taglist.vim'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'majutsushi/tagbar'
 
 
 call plug#end()
 
 let g:python_host_prog  = '/usr/bin/python'
 let g:python3_host_prog  = '/usr/bin/python3'
+
 
 "  General Setting 
   set nocompatible
@@ -39,6 +43,8 @@ let g:python3_host_prog  = '/usr/bin/python3'
   set incsearch  " Makes search act like search in modern browsers
   set lazyredraw " Don't redraw while executing macros (good performance config)
   set magic  " For regular expressions turn magic on
+  set showmatch
+  hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
   " cancel a search with Escape
   nnoremap <silent> <Esc> :nohlsearch<Bar>:echo<CR>
 
@@ -55,7 +61,7 @@ let g:python3_host_prog  = '/usr/bin/python3'
 
 
 " color scheme options
-  colorscheme forest-night
+  colorscheme gruvbox
 
   " this for NERDTree
   map <F2> :NERDTree<CR>
@@ -90,18 +96,24 @@ let g:python3_host_prog  = '/usr/bin/python3'
     nunmap gcu
   endfunction
 
-  xmap cm  <Plug>Commentary
-  nmap cm  <Plug>Commentary
-  omap cm  <Plug>Commentary
-  nmap cmc <Plug>CommentaryLine
-  nmap cm  <Plug>ChangeCommentary
-  nmap cmu <Plug>Commentary<Plug>Commentary
+  xmap mm <Plug>Commentary
+  nmap mm <Plug>Commentary
+  omap mm <Plug>Commentary
+  nmap ml <Plug>CommentaryLine
 
   augroup bepo_clash
     autocmd!
     autocmd VimEnter * call UnmapCommentary()
   augroup END
   
+  " for indentline
+  let g:indentLine_setColors = 0
+  let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+  " Start interactive EasyAlign in visual mode (e.g. vipga)
+  xmap ga <Plug>(EasyAlign)
+  " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+  nmap ga <Plug>(EasyAlign)
 "=============================== MAPPING OPTION ==============================="
 
   " remap ESC
@@ -129,14 +141,36 @@ let g:python3_host_prog  = '/usr/bin/python3'
 
 
 "================================= VHDL OPTION ================================"
+  au BufWritePost *.vhd silent! !ctags -R &
   " filetype dependent settings
+  autocmd FileType vhdl setlocal commentstring=--\ %s 
+  let g:tagbar_type_vhdl = {
+      \ 'ctagstype': 'vhdl',
+      \ 'kinds' : [
+          \'d:prototypes',
+          \'b:package bodies',
+          \'e:entities',
+          \'a:architectures',
+          \'t:types',
+          \'p:processes',
+          \'f:functions',
+          \'r:procedures',
+          \'c:constants',
+          \'T:subtypes',
+          \'r:records',
+          \'C:components',
+          \'P:packages',
+          \'l:locals'
+      \]
+  \}
+nnoremap <silent> <F1> :TagbarToggle<CR> 
   au Filetype vhdl call FT_vhdl()
-  function FT_vhdl()
     syntax on
     syntax enable
 
     set nocin inde=
 
+  function FT_vhdl()
     " Abbreviations
     iabbr ;s SIGNAL
     iabbr ;c CONSTANT C_
@@ -152,14 +186,14 @@ let g:python3_host_prog  = '/usr/bin/python3'
     iabbr ;o := (OTHERS => '0');
 
     nnoremap ;e i ELSIF () THEN<Esc>bba
-    nnoremap <buffer> ;v i: STD_LOGIC_VECTOR( DOWNTO 0);<Esc>4ba
-    nnoremap <buffer> ;t iSUBTYPE IS INTEGER RANGE  DOWNTO ;<Esc>4bi
-    nnoremap <buffer> ;m iTYPE _FSM_TYPE IS (<CR>  ); -- End _FSM_TYPE<Esc>Bklla
-    nnoremap <buffer> ;r iTYPE _RECORD_TYPE IS RECORD<CR>END RECORD; -- End _RECORD_TYPE<Esc>0kela
-    nnoremap <buffer> ;f i IF () THEN<CR><CR>END IF;<Esc>02k2wa
-    nnoremap <buffer> ;p 0i  comb_proc: PROCESS (ALL)<CR><CR>BEGIN -- for comb_proc<CR><CR>END PROCESS comb_proc;<Esc>03ki<tab><tab>
-    nnoremap <buffer> ;sp 0i  seq_proc: PROCESS (clk, reset)<CR>BEGIN -- for seq_proc<CR><tab>IF (reset = '1') THEN<CR><CR>ELSIF rising_edge(clk) THEN<CR><CR>END IF;<CR><backspace>END PROCESS seq_proc;<Esc>05k
-    nnoremap <buffer> ;c i<tab>CASE  IS<CR><tab>WHEN  =><CR><CR>>WHEN OTHER =><CR><backspace>END CASE;<Esc>4khh
-    nnoremap <buffer> ;- 0i-<Esc>79.0llR 
-    nnoremap <buffer> --- 0i-<Esc>79.0 
+    nnoremap ;v i: STD_LOGIC_VECTOR( DOWNTO 0);<Esc>4ba
+    nnoremap ;t iSUBTYPE IS INTEGER RANGE  DOWNTO ;<Esc>4bi
+    nnoremap ;m iTYPE _FSM_TYPE IS (<CR>  ); -- End _FSM_TYPE<Esc>Bklla
+    nnoremap ;r iTYPE _RECORD_TYPE IS RECORD<CR>END RECORD; -- End _RECORD_TYPE<Esc>0kela
+    nnoremap ;f i IF () THEN<CR><CR>END IF;<Esc>02k2wa
+    nnoremap ;p 0i  comb_proc: PROCESS (ALL)<CR><CR>BEGIN -- for comb_proc<CR><CR>END PROCESS comb_proc;<Esc>03ki<tab><tab>
+    nnoremap ;sp 0i  seq_proc: PROCESS (clk, reset)<CR>BEGIN -- for seq_proc<CR><tab>IF (reset = '1') THEN<CR><CR>ELSIF rising_edge(clk) THEN<CR><CR>END IF;<CR><backspace>END PROCESS seq_proc;<Esc>05k
+    nnoremap ;c i<tab>CASE  IS<CR><tab>WHEN  =><CR><CR>>WHEN OTHER =><CR><backspace>END CASE;<Esc>4khh
+    nnoremap  ;- 0i-<Esc>79.0llR 
+    nnoremap --- 0i-<Esc>79.0 
   endfunction
