@@ -141,7 +141,6 @@ let g:python3_host_prog  = '/usr/bin/python3'
 
 
 "================================= VHDL OPTION ================================"
-  au BufWritePost *.vhd silent! !ctags -R &
   " filetype dependent settings
   autocmd FileType vhdl setlocal commentstring=--\ %s 
   let g:tagbar_type_vhdl = {
@@ -154,7 +153,6 @@ let g:python3_host_prog  = '/usr/bin/python3'
           \'t:types',
           \'p:processes',
           \'f:functions',
-          \'r:procedures',
           \'c:constants',
           \'T:subtypes',
           \'r:records',
