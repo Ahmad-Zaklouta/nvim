@@ -1,7 +1,7 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
   Plug 'Ahmad-Zaklouta/gruvbox'
-  Plug 'Ahmad-Zaklouta/vim-vhdl'
+"  Plug 'Ahmad-Zaklouta/vim-vhdl'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'scrooloose/nerdtree'
@@ -16,7 +16,7 @@ call plug#begin('~/.local/share/nvim/plugged')
   Plug 'Yggdroot/indentLine'
 "  Plug 'https://github.com/vim-scripts/taglist.vim'
   Plug 'junegunn/vim-easy-align'
-  Plug 'majutsushi/tagbar'
+"  Plug 'majutsushi/tagbar'
 
 
 call plug#end()
@@ -126,6 +126,17 @@ let g:python3_host_prog  = '/usr/bin/python3'
   nnoremap $ <nop>
   nnoremap ^ <nop>
 
+  " provide movement in Insert Mode and Command Mode via <alt> 
+  noremap! <A-h> <left>
+  noremap! <A-j> <down>
+  noremap! <A-k> <up>
+  noremap! <A-l> <right>
+  inoremap <A-w> <C-o>w
+  inoremap <A-b> <C-o>b
+  inoremap <A-o> <C-o>o
+  cnoremap <expr> <A-b> &cedit. 'b' .'<C-c>'
+  cnoremap <expr> <A-w> &cedit. 'w' .'<C-c>'
+
   " for split
   set splitright
   set splitbelow
@@ -139,7 +150,11 @@ let g:python3_host_prog  = '/usr/bin/python3'
   " Make Y yank till end of line
   nnoremap Y y$
 
+  " Make P put space and paste
+  nnoremap P a<space><Esc>p
 
+  " Make S substitute the current word with yanked
+  nnoremap S ciw<C-r>0<Esc>
 "================================= VHDL OPTION ================================"
   " filetype dependent settings
   autocmd FileType vhdl setlocal commentstring=--\ %s 
@@ -182,16 +197,20 @@ nnoremap <silent> <F1> :TagbarToggle<CR>
     iabbr dt DOWNTO
     iabbr ;w WHEN =><Left><Left><Left>
     iabbr ;o := (OTHERS => '0');
+    iabbr ;; <=
+    iabbr .. =>
+    iabbr ;' :=
 
-    nnoremap ;e i ELSIF () THEN<Esc>bba
-    nnoremap ;v i: STD_LOGIC_VECTOR( DOWNTO 0);<Esc>4ba
+    imap ;r TYPE _RECORD_TYPE IS RECORD<CR>END RECORD _RECORD_TYPE;<Esc>0kela
+    imap ;v : STD_LOGIC_VECTOR( DOWNTO 0);<Esc>4ba
+    imap ;f IF () THEN<CR><backspace>END IF;<Esc>k02wa
+    imap ;e ELSIF () THEN<Esc>bba
+    imap ;1 := '1'
+    imap ;0 := '0'
+
+    nnoremap ;c iCASE  IS<CR>WHEN  =><CR>WHEN OTHERS =><CR><CR>END CASE;<Esc>4khh
     nnoremap ;t iSUBTYPE IS INTEGER RANGE  DOWNTO ;<Esc>4bi
     nnoremap ;m iTYPE _FSM_TYPE IS (<CR>  ); -- End _FSM_TYPE<Esc>Bklla
-    nnoremap ;r iTYPE _RECORD_TYPE IS RECORD<CR>END RECORD; -- End _RECORD_TYPE<Esc>0kela
-    nnoremap ;f i IF () THEN<CR><CR>END IF;<Esc>02k2wa
-    nnoremap ;p 0i  comb_proc: PROCESS (ALL)<CR><CR>BEGIN -- for comb_proc<CR><CR>END PROCESS comb_proc;<Esc>03ki<tab><tab>
-    nnoremap ;sp 0i  seq_proc: PROCESS (clk, reset)<CR>BEGIN -- for seq_proc<CR><tab>IF (reset = '1') THEN<CR><CR>ELSIF rising_edge(clk) THEN<CR><CR>END IF;<CR><backspace>END PROCESS seq_proc;<Esc>05k
-    nnoremap ;c i<tab>CASE  IS<CR><tab>WHEN  =><CR><CR>>WHEN OTHER =><CR><backspace>END CASE;<Esc>4khh
-    nnoremap  ;- 0i-<Esc>79.0llR 
+    nnoremap ;- 0i-<Esc>79.0llR 
     nnoremap --- 0i-<Esc>79.0 
   endfunction
