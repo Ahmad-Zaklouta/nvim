@@ -1,7 +1,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
   Plug 'Ahmad-Zaklouta/gruvbox'
-"  Plug 'Ahmad-Zaklouta/vim-vhdl'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'scrooloose/nerdtree'
@@ -17,7 +16,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 "  Plug 'https://github.com/vim-scripts/taglist.vim'
   Plug 'junegunn/vim-easy-align'
 "  Plug 'majutsushi/tagbar'
-
+  Plug 'dense-analysis/ale'
 
 call plug#end()
 
@@ -36,6 +35,10 @@ let g:python3_host_prog  = '/usr/bin/python3'
   set cursorline
   set number
   set relativenumber
+
+" wrapping 
+  set nolist 
+  set linebreak
 
 " For search and highlight
   set ignorecase " Ignore case when searching
@@ -56,9 +59,25 @@ let g:python3_host_prog  = '/usr/bin/python3'
   set autoindent
   set copyindent      " copy indent from the previous line
   set nocin nosi inde=
+  set breakindent
 
 "================================ PLUGIN OPTION ==============================="
 
+  " for ale and rust_hdl
+  " call ale#linter#Define('vhdl', {
+  " \    'name': 'rust_hdl',
+  " \    'lsp': 'stdio',
+  " \    'language': 'vhdl',
+  " \    'executable': 'vhdl_ls',
+  " \    'command': 'vhdl_ls',
+  " \    'project_root': getcwd(),
+  " \ })
+
+   let g:ale_linters = {
+   \   'vhdl' : ['ghdl'],
+   \}
+
+  let g:ale_linters_explicit = 1
 
 " color scheme options
   colorscheme gruvbox
@@ -82,6 +101,7 @@ let g:python3_host_prog  = '/usr/bin/python3'
       return "\<C-N>" 
     endif
   endfunction 
+
   " power tab 
   imap <silent><expr><tab> TabWrap() 
   " Enter to complete&close 
@@ -116,8 +136,18 @@ let g:python3_host_prog  = '/usr/bin/python3'
   nmap ga <Plug>(EasyAlign)
 "=============================== MAPPING OPTION ==============================="
 
+  " for LanguageClient
+  nnoremap <F5> : call LanguageClient_contextMenu()<cr>
+
   " remap ESC
   imap jj <Esc>
+
+  " wrap line movement
+  map j gj
+  map k gk
+
+  " ESC to exit Insert mode in terminal mode
+  tnoremap <Esc> <C-\><C-n>
   
   " move to beginning/end of line with B and E
   nnoremap B ^
@@ -137,15 +167,24 @@ let g:python3_host_prog  = '/usr/bin/python3'
   cnoremap <expr> <A-b> &cedit. 'b' .'<C-c>'
   cnoremap <expr> <A-w> &cedit. 'w' .'<C-c>'
 
+  " paste yanked in Command mode
+  cnoremap <A-p> <C-r>"
+
   " for split
   set splitright
   set splitbelow
   nnoremap <leader>v :vnew<CR>
+  nnoremap <leader>t :vnew<CR>:term<CR>
+
   "Smart way to move between windows
   map <C-j> <C-W>j
   map <C-k> <C-W>k
   map <C-h> <C-W>h
   map <C-l> <C-W>l
+
+  " relocate tabs
+  noremap <A-h> :-tabmove<CR>
+  noremap <A-l> :+tabmove<CR>
 
   " Make Y yank till end of line
   nnoremap Y y$
@@ -154,7 +193,7 @@ let g:python3_host_prog  = '/usr/bin/python3'
   nnoremap P a<space><Esc>p
 
   " Make S substitute the current word with yanked
-  nnoremap S ciw<C-r>0<Esc>
+   nnoremap S "_ciw<C-r>"<Esc>
 "================================= VHDL OPTION ================================"
   " filetype dependent settings
   autocmd FileType vhdl setlocal commentstring=--\ %s 
@@ -176,12 +215,13 @@ let g:python3_host_prog  = '/usr/bin/python3'
           \'l:locals'
       \]
   \}
-nnoremap <silent> <F1> :TagbarToggle<CR> 
-  au Filetype vhdl call FT_vhdl()
-    syntax on
-    syntax enable
 
-    set nocin inde=
+  nnoremap <silent> <F1> :TagbarToggle<CR> 
+  au Filetype vhdl call FT_vhdl()
+  syntax on
+  syntax enable
+
+  set nocin inde=
 
   function FT_vhdl()
     " Abbreviations
@@ -207,10 +247,21 @@ nnoremap <silent> <F1> :TagbarToggle<CR>
     imap ;e ELSIF () THEN<Esc>bba
     imap ;1 := '1'
     imap ;0 := '0'
+    imap ;R WAIT UNTIL rising_edge(clk);<esc>
+    imap ;F WAIT UNTIL falling_edge(clk);<esc>
 
+    nnoremap ;f iFOR i IN  TO  LOOP<CR><CR><backspace>END LOOP;<Esc>
+    nnoremap ;w iWHILE  LOOP<CR><CR><backspace>END LOOP;<Esc>
+    nnoremap ;p ilable : PROCESS<CR><CR>BEGIN<CR><CR>END PROCESS;<Esc>4kbbb
     nnoremap ;c iCASE  IS<CR>WHEN  =><CR>WHEN OTHERS =><CR><CR>END CASE;<Esc>4khh
+    nnoremap ;e i_inst : ENTITY work.(rtl)<CR><TAB>PORT MAP(<CR><TAB>clk => clk,<CR>reset => reset,<CR>_in => _in,<CR>_out => _out<CR>);<ESC>
     nnoremap ;t iSUBTYPE IS INTEGER RANGE  DOWNTO ;<Esc>4bi
     nnoremap ;m iTYPE _FSM_TYPE IS (<CR>  ); -- End _FSM_TYPE<Esc>Bklla
     nnoremap ;- 0i-<Esc>79.0llR 
     nnoremap --- 0i-<Esc>79.0 
+
+  " for editing in VHDL
+  " delete until "
+    nnoremap c' ct"
+
   endfunction
