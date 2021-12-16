@@ -1,2 +1,5 @@
 # nvim
 nvim configuration
+
+for ssh
+https://gist.github.com/bsara/5c4d90db3016814a3d2fe38d314f9c23
