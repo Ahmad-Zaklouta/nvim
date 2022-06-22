@@ -1,0 +1,203 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+      "key": "tab",
+      "command": "selectNextSuggestion",
+      "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+      "key": "shift+tab",
+      "command": "selectPrevSuggestion",
+      "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+      "key": "j",
+      "command": "vscode-neovim.compositeEscape1",
+      "when": "neovim.mode == insert && editorTextFocus",
+      "args": "j"
+    },
+    {
+      "key": "; s",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "signal"
+       }
+    },
+    {
+      "key": "; c",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "constant"
+       }
+    },
+    {
+      "key": "; i",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "integer"
+       }
+    },
+    {
+      "key": "; shift+i",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "integer_range"
+       }
+    },
+    {
+      "key": "; l",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "std_logic"
+       }
+    },
+    {
+      "key": "; shift+l",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "std_logic_vector"
+       }
+    },
+    {
+      "key": "; b",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "boolean"
+       }
+    },
+    {
+      "key": "; u",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "unsigned"
+       }
+    },
+    {
+      "key": "; space",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": ";"
+       }
+    },
+    { 
+      "key": "; ;",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "<="
+       }
+    },
+    {
+      "key": "; /",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "=>"
+       }
+    },
+    {
+      "key": "; '",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": ":="
+       }
+    },
+    {
+      "key": "; 1",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "'1'"
+       }
+    },
+    {
+      "key": "; 2",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "'0'"
+       }
+    },
+    {
+      "key": "; o",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && neovim.mode == insert && editorTextFocus",
+      "args": {
+        "name": "others"
+       }
+    },
+    {
+      "key": "; w",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "when"
+       }
+    },
+    {
+      "key": "; r",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "record"
+       }
+    },
+    {
+      "key": "; f",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "fsm"
+       }
+    },
+    {
+      "key": "; a",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "array"
+       }
+    },
+    {
+      "key": "; e",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "instantiation"
+       }
+    },
+    {
+      "key": "; -",
+      "command": "editor.action.insertSnippet",
+      "when": "editorLangId == vhdl && editorTextFocus",
+      "args": {
+        "name": "line"
+       }
+    },
+    { "key": "ctrl+a",  
+      "command": "wwm.aligncode",
+      "when": "editorTextFocus && !editorReadonly"
+    },
+    // for switching between panels
+    {
+      "key": "ctrl+tab",
+      "command": "workbench.action.quickOpenPreviousRecentlyUsedEditor",
+      "when": "!inEditorsPicker"
+    },
+    {
+      "key": "ctrl+shift+tab",
+      "command": "workbench.action.quickOpenLeastRecentlyUsedEditor",
+      "when": "!inEditorsPicker"
+    }
+    
+]
