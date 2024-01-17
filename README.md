@@ -1,9 +1,12 @@
 # nvim
-nvim configuration
+nvim configuration 
 
 cd ~/.config 
+
 mkdir nvim 
+
 nvim init.vim 
+
 " copy the configuration 
 
 install vim-plug: 
